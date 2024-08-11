@@ -23,6 +23,10 @@ function App() {
     client.models.Todo.delete({ id });
   }
 
+  function completeTask(todo: Schema["Todo"]["type"]) {
+    client.models.Todo.update({ id: todo.id, isDone: !todo.isDone });
+  }
+
   return (
     <Authenticator>
       {({ signOut, user }) => (
@@ -31,8 +35,12 @@ function App() {
           <button onClick={createTodo}>+ new</button>
           <ul>
             {todos.map((todo) => (
-              <li key={todo.id} onClick={() => deleteTodo(todo.id)}>
+              <li key={todo.id}>
                 {todo.content}
+                <span onClick={() => completeTask(todo)}>
+                  ({todo.isDone ? "Done" : "Pending"})
+                </span>
+                <span onClick={() => deleteTodo(todo.id)}>Remove</span>
               </li>
             ))}
           </ul>
